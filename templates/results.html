@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz Results</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <h1>Quiz Results</h1>
+
+        <p class="subtitle">
+            Welcome, {{ user_name }}!
+        </p>
+
+        {% if results %}
+
+            <!-- Statistics -->
+
+            <div class="stats-container">
+
+                <div class="stat-card">
+                    <h3>🏆 Best Score</h3>
+                    <p>{{ best_score }} / {{ total_questions }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>📊 Average</h3>
+                    <p>{{ average_score }}%</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>🎯 Attempts</h3>
+                    <p>{{ total_attempts }}</p>
+                </div>
+
+            </div>
+
+
+            <!-- Attempt History -->
+
+            <h2 class="history-title">
+                Attempt History
+            </h2>
+
+            {% for result in results %}
+
+                <div class="result-card">
+
+                    <h2>
+                        Score:
+                        {{ result.score }}
+                        /
+                        {{ result.total_questions }}
+                    </h2>
+
+                    <p>
+                        Percentage:
+                        {{ result.percentage }}%
+                    </p>
+
+                    <p>
+                        Attempt Date:
+                        {{ result.attempt_date }}
+                    </p>
+
+                    <p class="score-message">
+
+                        {% if result.score == result.total_questions %}
+
+                            🎉 Excellent! Perfect Score!
+
+                        {% elif result.percentage >= 70 %}
+
+                            👍 Great job!
+
+                        {% elif result.percentage >= 50 %}
+
+                            🙂 Good effort! Keep practicing.
+
+                        {% else %}
+
+                            💪 Keep practicing and try again!
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="result-card">
+
+                <p>
+                    You haven't attempted the quiz yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Buttons -->
+
+        <div class="result-actions">
+
+            <a href="/quiz" class="result-btn">
+                Take Quiz Again
+            </a>
+
+            <a href="/" class="result-btn secondary">
+                Home
+            </a>
+
+            <a href="/logout" class="result-btn logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

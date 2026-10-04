@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Quiz</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <h1>🧠 Online Quiz</h1>
+
+        <p class="subtitle">
+          Test your knowledge and challenge yourself!
+        </p>
+
+        <form method="POST" action="/submit" id="quizForm">
+
+            <div class="quiz-top">
+
+    <div class="progress-container">
+
+        <p id="progress">
+            Question 1 of {{ questions|length }}
+        </p>
+
+        <div class="progress-track">
+            <div id="progressBar"></div>
+        </div>
+
+    </div>
+
+    <div class="timer-box">
+        ⏱️ <span id="timer">10:00</span>
+    </div>
+
+</div>
+
+            {% for question in questions %}
+
+            <div class="question-box">
+
+               <p class="question-category">
+                   🏷️ {{ question.category }}
+               </p>
+
+               <h2>
+                   {{ loop.index }}. {{ question.question_text }}
+               </h2>
+
+                <label class="option">
+                    <input type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="A">
+                    {{ question.option_a }}
+                </label>
+
+                <label class="option">
+                    <input type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="B">
+                    {{ question.option_b }}
+                </label>
+
+                <label class="option">
+                    <input type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="C">
+                    {{ question.option_c }}
+                </label>
+
+                <label class="option">
+                    <input type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="D">
+                    {{ question.option_d }}
+                </label>
+
+            </div>
+
+            {% endfor %}
+
+            <p id="errorMessage" role="alert"></p>
+
+            <div class="quiz-navigation">
+
+                <button type="button" id="prevBtn">
+                    Previous
+                </button>
+
+                <button type="button" id="nextBtn">
+                    Next
+                </button>
+
+                <button type="submit" id="submitBtn" hidden>
+                    Submit Quiz
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+        const form = document.getElementById("quizForm");
+        const questions = Array.from(
+            document.querySelectorAll(".question-box")
+        );
+
+        const progress = document.getElementById("progress");
+        const progressBar = document.getElementById("progressBar");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const submitBtn = document.getElementById("submitBtn");
+        const errorMessage = document.getElementById("errorMessage");
+
+        let currentQuestion = 0;
+        let timeLeft = 10 * 60;
+
+const timer = document.getElementById("timer");
+
+const countdown = setInterval(function () {
+
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
+    timer.textContent =
+        `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+    if (timeLeft <= 0) {
+
+        clearInterval(countdown);
+
+        alert("Time is up! Your quiz will be submitted.");
+
+        form.submit();
+
+    }
+
+    timeLeft--;
+
+}, 1000);
+           function showQuestion(index) {
+            questions.forEach((question, i) => {
+                question.hidden = i !== index;
+            });
+
+            progress.textContent =
+                `Question ${index + 1} of ${questions.length}`;
+
+            progressBar.style.width =
+                `${((index + 1) / questions.length) * 100}%`;
+
+            prevBtn.hidden = index === 0;
+            nextBtn.hidden = index === questions.length - 1;
+            submitBtn.hidden = index !== questions.length - 1;
+
+            errorMessage.textContent = "";
+        }
+
+        function isAnswered(index) {
+            return questions[index].querySelector(
+                'input[type="radio"]:checked'
+            ) !== null;
+        }
+
+        nextBtn.addEventListener("click", function () {
+            if (!isAnswered(currentQuestion)) {
+                errorMessage.textContent =
+                    "Please select an answer before continuing.";
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        prevBtn.addEventListener("click", function () {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        form.addEventListener("submit", function (event) {
+            const unanswered = questions.findIndex(
+                (_, index) => !isAnswered(index)
+            );
+
+            if (unanswered !== -1) {
+                event.preventDefault();
+
+                currentQuestion = unanswered;
+                showQuestion(currentQuestion);
+
+                errorMessage.textContent =
+                    "Please answer every question before submitting.";
+
+                return;
+            }
+
+            const confirmed = confirm(
+                "Are you sure you want to submit your quiz?"
+            );
+
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+
+        if (questions.length === 0) {
+            progress.textContent = "No questions available.";
+            prevBtn.hidden = true;
+            nextBtn.hidden = true;
+            submitBtn.hidden = true;
+        } else {
+            showQuestion(0);
+        }
+    </script>
+
+</body>
+</html>

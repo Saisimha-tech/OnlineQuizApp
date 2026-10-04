@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Online Quiz Application</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        {% if logged_in %}
+
+            <h1>Welcome, {{ user_name }}! 👋</h1>
+
+            <p class="subtitle">
+                Ready to test your knowledge?
+            </p>
+
+            <div class="home-card">
+
+                <h2>🎯 Take a Quiz</h2>
+
+                <p>
+                    Test your knowledge and see how well you perform.
+                </p>
+
+                <a href="/quiz" class="home-btn">
+                    Start Quiz
+                </a>
+
+            </div>
+
+            <div class="home-card">
+
+                <h2>📊 Your Results</h2>
+
+                <p>
+                    View your previous quiz attempts and scores.
+                </p>
+
+                <a href="/results" class="home-btn secondary">
+                    View Results
+                </a>
+
+            </div>
+
+            <a href="/logout" class="logout-link">
+                Logout
+            </a>
+
+        {% else %}
+
+            <h1>Online Quiz</h1>
+
+            <p class="subtitle">
+                Test your knowledge and improve your skills!
+            </p>
+
+            <div class="home-card">
+
+                <h2>Welcome! 👋</h2>
+
+                <p>
+                    Take online quizzes, test your knowledge,
+                    and track your scores.
+                </p>
+
+            </div>
+
+            <a href="/login" class="home-btn">
+                Login
+            </a>
+
+            <a href="/register" class="home-btn secondary">
+                Create Account
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
