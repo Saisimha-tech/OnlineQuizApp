@@ -1,18 +1,18 @@
 # 🧠 Online Quiz Application
 live demo:https://onlinequizapp-sey5.onrender.com/
-Features
+Features:
 
-User Registration and Login
-Randomized Quiz Questions
-Multiple Quiz Categories
-One Question at a Time
-Previous and Next Navigation
-Progress Bar
-10-Minute Countdown Timer
-Automatic Score Calculation
-Quiz Attempt History
-Performance Statistics
-Responsive Web Interface
+User Registration and Login,
+Randomized Quiz Questions,
+Multiple Quiz Categories,
+One Question at a Time,
+Previous and Next Navigation,
+Progress Bar,
+10-Minute Countdown Timer,
+Automatic Score Calculation,
+Quiz Attempt History,
+Performance Statistics,
+Responsive Web Interface,
 A web-based Online Quiz Application developed as a BCA project using Flask, Python, HTML, CSS, JavaScript, and SQLite.
 
 The application allows users to create an account, log in, take a timed quiz, view their scores, and track their previous quiz attempts.
