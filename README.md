@@ -60,6 +60,7 @@ OnlineQuizApp/
     ├── quiz.html
     └── results.html
 ```
+this is how it looks >><img width="1920" height="912" alt="image" src="https://github.com/user-attachments/assets/1cc90bc6-31aa-484a-84d6-0b619de451a0" />
 
 ## ▶️ How to Run
 
