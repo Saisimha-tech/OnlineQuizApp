@@ -35,6 +35,7 @@ def home():
 
 
 # Register
+# Register
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -43,16 +44,29 @@ def register():
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
+
+        # Hash the password
         hashed_password = generate_password_hash(password)
 
         connection = get_db_connection()
 
+        # Check if email already exists
+        existing_user = connection.execute(
+            "SELECT * FROM users WHERE email = ?",
+            (email,)
+        ).fetchone()
+
+        if existing_user:
+            connection.close()
+            return "Email already registered. Please use another email."
+
+        # Save the new user
         connection.execute(
             """
-            INSERT INTO users (name, email, hashed_password)
-            VALUES (?, ?, ?)
+            INSERT INTO users (name, email, password, hashed_password)
+            VALUES (?, ?, ?, ?)
             """,
-            (name, email, password)
+            (name, email, password, hashed_password)
         )
 
         connection.commit()
@@ -74,17 +88,23 @@ def login():
 
         connection = get_db_connection()
 
+        # Find user using email only
         user = connection.execute(
             """
             SELECT * FROM users
-            WHERE email = ? AND password = ?
+            WHERE email = ?
             """,
-            (email, password)
+            (email,)
         ).fetchone()
 
         connection.close()
 
-        if user:
+        # Check password
+        if user and check_password_hash(
+            user["hashed_password"],
+            password
+        ):
+
             session["user_id"] = user["user_id"]
             session["user_name"] = user["name"]
 
