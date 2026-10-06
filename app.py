@@ -31,10 +31,6 @@ def home():
     )
 
 
-
-
-
-# Register
 # Register
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -62,12 +58,13 @@ def register():
 
         # Save the new user
         connection.execute(
-            """
-            INSERT INTO users (name, email, password, hashed_password)
-            VALUES (?, ?, ?, ?)
-            """,
-            (name, email, password, hashed_password)
-        )
+             """
+             INSERT INTO users (name, email, password)
+             VALUES (?, ?, ?)
+             """,
+             (name, email, hashed_password)
+         )
+        
 
         connection.commit()
         connection.close()
@@ -101,7 +98,7 @@ def login():
 
         # Check password
         if user and check_password_hash(
-            user["hashed_password"],
+            user["password"],
             password
         ):
 
